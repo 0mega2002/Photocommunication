@@ -5,5 +5,6 @@ Arduino based laser transmitter.
 + 8 lasers
 + 8 phototransistors
 + 2 cases
-In order to make this work you need to install PySerial.
+In order to make this work you need to install PySerial
+
 (Some code may still be work in progress)
