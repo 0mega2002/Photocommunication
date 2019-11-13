@@ -49,27 +49,39 @@ def receive(ser, window, lbl1):
     global data, datadict
     while True:
         c = ser.read().decode("ascii")  # attempt to read a character from Serial
-        print(c)
+
         # was anything read?
         if len(c) == 0:
-            if len(data)>0:
-                try:
-                    data = str(data)[2:-1]
-                    while len(data)%4 != 0:
-                        data += "="
-                    datadict = eval(base64.b64decode(data.encode()))
-                    datadict["d"] = datadict["d"][2:-1]
-                    while len(datadict["d"])%4 != 0:
-                        datadict["d"]+="="
-                    datadict["d"] = base64.b64decode(datadict["d"])   #.encode()).decode(
-                    logging.debug(str(datadict))
-                    lbl1.config(text=str(datadict))
-                    logging.info("Package decoded")
-                except:
-                    logging.debug(str(data))
-                    logging.error("Package syntax error")
             break
-        
+        if c == " ":
+            break
+        if c == "\n":
+            try:
+                data.replace(" ", "").replace("\n", "")
+                print(type(data))
+                print(len(data))
+                print("ricevuto " + data)
+
+                while (len(data)-2) % 4 != 0:
+                    data.replace(" ", "").replace("\n", "")
+                    data += "="
+                print("ricevuto con = " + data)
+
+                datadict = eval(base64.b64decode(data.encode()))
+
+                datadict["d"] = datadict["d"][2:-1]
+                while len(datadict["d"]) % 4 != 0:
+                    datadict["d"] += "="
+                datadict["d"] = base64.b64decode(datadict["d"])  # .encode()).decode(
+                logging.debug(str(datadict))
+                lbl1.config(text=str(datadict))
+                logging.info("Package decoded")
+                data = ""
+            except:
+                logging.debug(str(data))
+                logging.error("Package syntax error")
+            break
         else:
-            data += c 
+            # print(c,end="")
+            data += c
     window.after(10, lambda a=ser, b=window, c=lbl1: receive(a, b, c))  # check serial again soon
