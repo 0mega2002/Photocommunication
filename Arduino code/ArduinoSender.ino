@@ -1,10 +1,11 @@
-const int DEL = 1000;
+const int DEL = 1000; //vel originale 1000
 int st = 0;
 int acc = 1;
-byte data[1024];
+byte data[5120];
 int pos = 0;
-bool p = false;
-void setup() {
+bool p = true;
+void setup()
+{
   // put your setup code here, to run once:
   Serial.begin(115200);
   pinMode(3, OUTPUT);
@@ -15,8 +16,9 @@ void setup() {
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
-  pinMode(11, OUTPUT);
+  //pinMode(11, OUTPUT);
   digitalWrite(9, HIGH);
+  while(!Serial.available()){}
 }
 
 //void loop() {
@@ -38,84 +40,99 @@ void setup() {
 //  }
 //}
 
-void loop() {
-  while (Serial.available() > 0) {
-    data[pos] = Serial.read();
-    pos++;
-  }
+void loop()
+{
+//Serial.available();
   
-  if (pos > 0) {
-    for (int i = 0; i < pos; i++) {
-      if (acc == 1) {digitalWrite(9, LOW);acc = 0;}
-      else if (acc == 0) {digitalWrite(9, HIGH);acc = 1;}
-      if (i == pos-1)p=true;
-      invio(trasf(data[i]));
-      }
-      
-    }
-    memset(data,0,1024);
-    pos = 0;
-    for (int i = 5; i >= 0; i--) {
-      int porta = i + 3;
-        digitalWrite(porta, LOW);
-        digitalWrite(10,LOW);
-    }
+  if (Serial.available() > 0)
+  {
+    data[pos] = Serial.read();
+    Serial.print("d: ");
+    Serial.print((char)data[pos]);
+    Serial.print(" ");
+    Serial.print("l: ");
+    Serial.println(pos);
+    //for (int i = 0; i<pos;i++){
+     //Serial.print(trasf(data[i]));
+     //}
+     pos++;
   }
+else{
+    if (pos > 0){
+      Serial.println(pos);
+    for (int i = 0; i < pos; i++)
+    {if (acc == 1){digitalWrite(9, LOW);acc = 0;}
+      else if (acc == 0){digitalWrite(9, HIGH);acc = 1;}
+      if (i == pos - 1){
+      digitalWrite(10, HIGH);
+      Serial.println("acceso");
+      }
+      invio(trasf(data[i]));
+    }
+    for (int i = 5; i >= 0; i--){
+      int porta = i + 3;
+      digitalWrite(porta, LOW);
+      memset(data, 0, 5120);
+      pos = 0;
+    }
+    digitalWrite(10, LOW);
+    Serial.println("spento");
+  }
+}}
 
-void invio(int x) {
+void invio(int x)
+{
   int bin[6] = {0, 0, 0, 0, 0, 0};
   int i = 0;
-  while (x > 0) {
+  while (x > 0)
+  {
     bin[i] = x % 2;
     x = x / 2;
     i++;
   }
-  for (int i = 5; i >= 0; i--) {
+  for (int i = 5; i >= 0; i--)
+  {
     int porta = i + 3;
-    if (p){digitalWrite(10,HIGH);}
-    if (bin[i] == 1) {
+    if (bin[i] == 1)
+    {
       digitalWrite(porta, HIGH);
     }
-    else {
+    else
+    {
       digitalWrite(porta, LOW);
     }
     //Serial.print(bin[i]);
   }
- // Serial.println();
-  if (st == 0) {
-    digitalWrite(11, HIGH);
-    st = 1;
-  }
-  else {
-    digitalWrite(11, LOW);
-    st = 0;
-
-  }
+  // Serial.println();
   delayMicroseconds(DEL);
   // IL 3 è LA PRIMA CIFRA A DESTRA(1), IL 10 è L'OTTAVA CIFRA(128)
 }
 
-
-int trasf(byte x) {
-  if (x <= 90 && x >= 65) {
-    int y = x - 65;               //caratteri maiuscoli
+int trasf(byte x)
+{
+  if (x <= 90 && x >= 65)
+  {
+    int y = x - 65; //caratteri maiuscoli
     return y;
   }
-  if (x <= 122 && x >= 97) {
-    int y = x - 71;              //caratteri minuscoli
+  if (x <= 122 && x >= 97)
+  {
+    int y = x - 71; //caratteri minuscoli
     return y;
   }
-  if (x <= 57 && x >= 48) {
-    int y = x + 4;               //numeri
+  if (x <= 57 && x >= 48)
+  {
+    int y = x + 4; //numeri
     return y;
   }
-  if (x == 43) {
-    int y = 62;                   //+
+  if (x == 43)
+  {
+    int y = 62; //+
     return y;
   }
-  if (x == 47) {
-    int y = 63;                   //barra"/"
+  if (x == 47)
+  {
+    int y = 63; //barra"/"
     return y;
   }
-
 }
