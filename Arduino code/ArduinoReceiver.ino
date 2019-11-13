@@ -1,5 +1,5 @@
 int lmao = 1;
-byte data[1024];
+byte data[5120];
 int pos = 0;
 
 bool isFirst = true;
@@ -40,8 +40,29 @@ void loop() {
     delayMicroseconds(500);
     scriviser();
     lmao = 1 - accc;
-
-
+    if (!digitalRead(10)) {
+      for (int i = 0; i < pos + 1; i++) {
+        if ((char)data[i] == 'A' && isFirst) {
+          continue;
+        }
+        if ((char)data[i] != 'A'||!isFirst) {
+          if (isFirst) {
+            isFirst = false;
+          }
+          if (!isFirst) {
+            Serial.print((char)data[i]);
+            if (i == pos) {
+              Serial.println();
+            }
+          }
+        }
+      }
+      memset(data, 0, 5120);
+      //Serial.print("-8ON-");
+      pos = 0;
+      isFirst = true;
+      
+    }
   }
 }
 
@@ -57,35 +78,8 @@ void scriviser() {
   }
   int numdec = (numero[0] * 1) + (numero[1] * 2) + (numero[2] * 2 * 2) + (numero[3] * 2 * 2 * 2) + (numero[4] * 2 * 2 * 2 * 2) + (numero[5] * 2 * 2 * 2 * 2 * 2);
   //Serial.print((char)trasf(numdec));
-  if (digitalRead(10)) {
-    data[pos] = trasf(numdec);
-    pos++;
-  }
-  if (!digitalRead(10)) {
-    data[pos] = trasf(numdec);
-
-    for (int i = 0; i < pos + 1; i++) {
-      if ((char)data[i] == 'A' && isFirst) {
-        continue;
-      }
-      if ((char)data[i] != 'A') {
-        if (isFirst) {
-          isFirst = false;
-        }
-        if (!isFirst) {
-          Serial.print((char)data[i]);
-          if (i == pos) {
-            Serial.println();
-          }
-        }
-      }
-
-    }
-
-    memset(data, 0, 1024);
-    pos = 0;
-  }
-
+  data[pos] = trasf(numdec);
+  pos++;
 }
 
 byte trasf(int x) {
