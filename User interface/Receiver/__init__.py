@@ -1,10 +1,10 @@
 import sys
-from tkinter import Button, Entry, Label, Spinbox, Tk, ttk
+from tkinter import Button, Entry, Label, Spinbox, Tk, ttk, scrolledtext
 import pip
 from configparser import ConfigParser
 from func import *
 
-pip.__version__ = 1.0
+pip.__version__ = 2.0
 pip.___author__ = "Giulio Tavera and Edoardo Tinaru"
 
 data = ""
@@ -55,7 +55,7 @@ def main():
     tab_control.add(tab2, text="Ports")
     tab_control.add(tab3, text="Info")
 
-    lbl1 = Label(tab1, text="Still nothing...")
+    lbl1 = scrolledtext.ScrolledText(tab1,wrap = "word")
     lbl1.grid(column=0, row=0)
 
     portsSpinbox = Spinbox(tab2, from_=0, to=256)
