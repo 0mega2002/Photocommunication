@@ -1,7 +1,7 @@
 const int DEL = 1000; //vel originale 1000
 int st = 0;
 int acc = 1;
-byte data[5120];
+byte data[4000];//4000 RX,0 TX Arduino Mega
 int pos = 0;
 bool p = true;
 void setup()
@@ -20,25 +20,6 @@ void setup()
   digitalWrite(9, HIGH);
   while(!Serial.available()){}
 }
-
-//void loop() {
-//  // put your main code here, to run repeatedly:
-//  if (Serial.available()) {
-//    int ch = Serial.read();
-//    int numchar = (trasf(ch));
-//    if (acc == 1){digitalWrite(9,LOW);acc = 0;}
-//  else if (acc == 0){digitalWrite(9,HIGH);acc = 1;}
-//    invio(numchar);
-//
-//    //Serial.println(ch);
-//  }
-//  for (int i = 5; i >= 0; i--) {
-//    int porta = i + 3;
-//    if (1) {
-//      digitalWrite(porta, LOW);
-//    }
-//  }
-//}
 
 void loop()
 {
@@ -72,7 +53,7 @@ else{
     for (int i = 5; i >= 0; i--){
       int porta = i + 3;
       digitalWrite(porta, LOW);
-      memset(data, 0, 5120);
+      memset(data, 0, 4000);
       pos = 0;
     }
     digitalWrite(10, LOW);
