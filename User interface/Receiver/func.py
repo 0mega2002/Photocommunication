@@ -74,7 +74,10 @@ def receive(ser, window, lbl1):
                     datadict["d"] += "="
                 datadict["d"] = base64.b64decode(datadict["d"])  # .encode()).decode(
                 logging.debug(str(datadict))
-                lbl1.config(text=str(datadict))
+                lbl1.delete("1.0","end")
+                temp = str(datadict)
+                print(temp)
+                lbl1.insert("insert",temp)
                 logging.info("Package decoded")
                 data = ""
             except:
