@@ -1,6 +1,6 @@
 # Photocommunication
 Arduino based laser transmitter.
-## BOM
+## Materials
 + 2 arduino mega
 + 8 lasers
 + 8 phototransistors
